@@ -1,0 +1,100 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int loading[10];
+
+int IsPrime(int a) 
+{
+	if (a == 0)
+		return 0;
+	else
+	{
+		for (int i = 2; i*i < a; i++)
+			if (a % i == 0)
+				return 0;
+			else
+				a = a;
+		return 1;
+	}
+}
+
+int FirstZeroIndex(int *a, int n )
+{
+	for (int i = 0; i < n; i++)
+		if (a[i] == 0)
+			return i;
+	return -1;
+}
+
+void loadingMenu(int *a, int place, int n)
+{
+	int p = FirstZeroIndex(loading, 10);
+	if (loading[(int)(place / n * 10)] == 0) {
+		for (int i = 0; i < p;i++)
+			printf("#");
+		loading[(int)(place / n * 10)] = 1;
+	}
+	printf("\n",place/n*100);
+
+}
+
+void Swap(int *a, int *b)
+{
+	int tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+void SuperSort(int *a, int n)
+{
+	for (int i = 0; i < n - 1; i++)
+		for (int j = 0; j < n - 1; j++)
+			if (a[j] == 0)
+				Swap(&a[j], &a[j + 1]);
+}
+
+void Compress(int *a, int place, int n)
+{
+	for (int i = place; i < n; i++)
+		if (!IsPrime(a[i]))
+			a[i] = 0;
+}
+
+int FillUp(int *a, int place, int curn, int n) {
+	for (int i = place; i < n; i++)
+		a[i] = curn++;
+	return curn;
+}
+
+int main(void)
+{
+	int n = 10, place = 0, curn = 2, cnt = 0;
+	scanf("%i", &n);
+	int *a;
+	a = malloc(n * 4);
+	a[n - 1] = 0;
+	printf("loading\n");
+	while(!IsPrime(a[n - 1]) && cnt < 100)
+	{
+		
+		curn = FillUp(a, place, curn, n);
+
+		Compress(a, place, n);
+		loadingMenu(a,place,n);
+		SuperSort(a, n);
+
+		place = FirstZeroIndex(a, n);
+
+	}
+	
+	for (int i = 0; i < n; i++)
+		printf("%d ", a[i]);
+	printf("\n");
+	scanf("%d", &place);
+
+	free(a);
+
+	return 0;
+}
