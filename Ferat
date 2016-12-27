@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
+
 
 int loading[10];
 
@@ -11,7 +13,7 @@ int IsPrime(int a)
 		return 0;
 	else
 	{
-		for (int i = 2; i*i < a; i++)
+		for (int i = 2; i*i <= a; i++)
 			if (a % i == 0)
 				return 0;
 			else
@@ -30,14 +32,11 @@ int FirstZeroIndex(int *a, int n )
 
 void loadingMenu(int *a, int place, int n)
 {
-	int p = FirstZeroIndex(loading, 10);
-	if (loading[(int)(place / n * 10)] == 0) {
-		for (int i = 0; i < p;i++)
-			printf("#");
-		loading[(int)(place / n * 10)] = 1;
-	}
-	printf("\n",place/n*100);
-
+	system("cls");
+	int i = 0;
+	int p = (int)(place * 10 / n);
+	for (i = 0; i < p; i++)
+		printf("#");
 }
 
 void Swap(int *a, int *b)
@@ -78,17 +77,21 @@ int main(void)
 	printf("loading\n");
 	while(!IsPrime(a[n - 1]) && cnt < 100)
 	{
-		
+		int prev = 0;
 		curn = FillUp(a, place, curn, n);
 
 		Compress(a, place, n);
-		loadingMenu(a,place,n);
-		SuperSort(a, n);
 
+		if ((int)(place * 10 / n) > prev)
+			loadingMenu(a,place,n);
+
+		SuperSort(a, n);
+		prev = (int)(place * 10 / n);
 		place = FirstZeroIndex(a, n);
 
 	}
-	
+	system("cls");
+	printf("########## - Done\n");
 	for (int i = 0; i < n; i++)
 		printf("%d ", a[i]);
 	printf("\n");
