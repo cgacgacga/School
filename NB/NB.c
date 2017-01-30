@@ -146,3 +146,20 @@ void SortBy(int cur, Pupil *DB, char adj)
         Swap(&DB[j], &DB[j+1]);
 
 }
+
+
+void Flip(int cur, Pupil *DB)
+{
+  int i;
+  for (i = 0; i < cur/2; i++)
+    Swap(&DB[i], &DB[cur - i - 1]);
+}
+
+
+/*
+int fwrite(int cur, Pupil *DB)
+{
+  FILE *F;
+  F = fopen("output.txt", "w");
+}
+*/
