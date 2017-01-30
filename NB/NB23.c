@@ -31,7 +31,7 @@ int Menu(int cur, Pupil *DB)
         char adj;
 	char num[22];
 	int ch = 0;
-	printf("0 - Exit\n1 - Add pupil\n2 - Delete by number\n3 - Output all pupils\n4 - Sort datebase\n5 - Flip database\n6 - Save database\n7 - load database\n");
+	printf("0 - Exit\n1 - Add pupil\n2 - Delete by number\n3 - Output all pupils\n4 - Sort datebase\n5 - Flip database\n6 - Save database\n7 - load database\nClear Scree\n");
 	switch (getch())
 	{
 	case '0':
@@ -58,13 +58,17 @@ int Menu(int cur, Pupil *DB)
                 scanf("%c", &adj);
                 SortBy(cur, DB, adj);
 		break;
-	/*case '5':
+	case '5':
+                Flip(cur, DB);
 		break;
-	case '6':
+	/*case '6':
 		break;
 	case '7':
 		break;
 	*/
+        case '8':
+            printf("cls");
+            break;
 	}
       return 0;
 }
