@@ -1,11 +1,16 @@
 /* Kuzminov Artem, 10-4, 23/01/2017 */
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <string.h>
 #include "nb.h"
 
-
+void Swap(Pupil *a, Pupil *b )
+{
+  Pupil tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
 
 void GetStr(char *name, int n)
 {
@@ -108,4 +113,36 @@ int Output(int cur, Pupil *DB)
 		printf("Birthday:%i/%i/%i\nAge:%i\nForm:%i\nForm digit:%c\nSex:%c\n", DB[i].Birthday.Day, DB[i].Birthday.Month, DB[i].Birthday.Year, DB[i].Age, DB[i].Form, DB[i].FormDigit, DB[i].Sex);
 	}
 	return 0;
+}
+
+
+int Cmp(Pupil *A, Pupil *B, char a){
+  if (a == 'a')
+  { 
+    int ag1 = A->Birthday.Year * 12 * 31 + A->Birthday.Month * 31 + A->Birthday.Day,
+    ag2 = B->Birthday.Year * 12 * 31 + B->Birthday.Month * 31 + B->Birthday.Day;
+    if (ag1 > ag2)
+      return 1;
+    else return 0;
+  }
+  if (a == 'b')
+  {
+     int res = strcmp(A->Surname, B->Surname);
+     if (res < 0)
+       return 0;
+     else
+       return 1;
+  }
+  return 0;
+}
+
+
+void SortBy(int cur, Pupil *DB, char adj)
+{
+  int i, j;
+  for (i = 0; i < cur; i++)
+    for(j = 0; j < cur; j++)
+      if (Cmp(&DB[j], &DB[j+1], adj))
+        Swap(&DB[j], &DB[j+1]);
+
 }
