@@ -1,6 +1,6 @@
 /*Kuzminov Artem 10-4, 2017/16/01*/
 
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +28,7 @@ void GetStr1(char *name, int n)
 
 int Menu(int cur, Pupil *DB)
 {
+        char adj;
 	char num[22];
 	int ch = 0;
 	printf("0 - Exit\n1 - Add pupil\n2 - Delete by number\n3 - Output all pupils\n4 - Sort datebase\n5 - Flip database\n6 - Save database\n7 - load database\n");
@@ -51,9 +52,13 @@ int Menu(int cur, Pupil *DB)
 		if (ch == 1)
 			printf("Failed to output");
 		return 0;
-	/*case '4':
+	case '4':
+                printf("how to sort you telephone book?\n");
+                printf("a - by age, b - by alphabet\n");
+                scanf("%c", &adj);
+                SortBy(cur, DB, adj);
 		break;
-	case '5':
+	/*case '5':
 		break;
 	case '6':
 		break;
@@ -61,6 +66,7 @@ int Menu(int cur, Pupil *DB)
 		break;
 	*/
 	}
+      return 0;
 }
 
 int main(void)
@@ -71,7 +77,6 @@ int main(void)
 	{
 		c = Menu(cur, DB);
 		cur += c;
-		printf("%i", cur);
 	}
 	return 0;
 }
