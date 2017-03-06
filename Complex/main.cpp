@@ -1,16 +1,18 @@
-/*Kuzminov Artem 10-4*/
+/*Kuzminvinov Artem 10-4*/
 
 #include <stdlib.h>
 #include <glut.h>
 #include <stdio.h>
+#include <time.h>
+#include <math.h>
 
 
-#define W 500
-#define H 500
-#define MagicalConstCRe  0,36
-#define MagicalConstCIm  0,34
+#define W 720
+#define H 480
+#define MagicalConstCRe  0.365
+#define MagicalConstCIm  0.365
 
-double Frame[H][W][3];
+unsigned char Frame[H][W][3];
 
 typedef struct {
 	double Re, Im;
@@ -19,7 +21,7 @@ typedef struct {
 Complex Mult(Complex A, Complex B)
 {
 	Complex Z;
-	Z.Re = A.Re*A.Im - B.Re*B.Im;
+	Z.Re = A.Re*A.Re - B.Im*B.Im;
 	Z.Im = A.Re*A.Im + B.Re*B.Im;
 	return Z;
 }
@@ -35,7 +37,7 @@ Complex Addition(Complex A, Complex B)
 
 double Length(Complex A)
 {
-	return A.Re*A.Re + A.Im*A.Im ;
+	return A.Re * A.Re + A.Im * A.Im;
 }
 
 void Keyboard(unsigned char Key, int X, int Y)
@@ -47,9 +49,10 @@ void Keyboard(unsigned char Key, int X, int Y)
 int ComplIter(Complex Z)
 {
 	int n = 0;
+
 	Complex C;
-	C.Re = MagicalConstCRe;
-	C.Im = MagicalConstCIm;
+	C.Re = MagicalConstCRe + 0.011 * fabs(sin(clock() / (double)CLOCKS_PER_SEC));
+	C.Im = MagicalConstCIm + 0.011 * fabs(sin(clock() / (double)CLOCKS_PER_SEC));
 
 	while (n++ <= 254 && Length(Z) <= 4)
 		Z = Addition(Mult(Z, Z), C);
@@ -72,14 +75,15 @@ void Build(void)
 		{
 			Complex Poop;
 			int n;
-			
-			Poop.Re = col;
-			Poop.Im = row;
+			a = (double)(col*(x1 - x0)) / W + x0;
+			b = (double)(row*(y1 - y0) / H) + y0;
+			Poop.Re = a;
+			Poop.Im = b;
 			n = ComplIter(Poop);
-			printf("%i", n);
-			Frame[col][row][0] = (double)n;
-			Frame[col][row][1] = (double)n / 2;
-			Frame[col][row][2] = (double)n / 4;
+			//printf("%i ", n);
+			Frame[row][col][0] = n / 4;
+			Frame[row][col][1] = n / 2;
+			Frame[row][col][2] = n;
 
 		}
 
@@ -92,6 +96,9 @@ void Display(void)
 {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glRasterPos2d(-1, 1);
+	glPixelZoom(1, -1);
 
 	Build();
 
