@@ -1,4 +1,4 @@
-/*Kuzminvinov Artem 10-4*/
+/*Kuzminov Artem 10-4*/
 
 #include <stdlib.h>
 #include <glut.h>
@@ -7,8 +7,8 @@
 #include <math.h>
 
 
-#define W 720
-#define H 480
+#define W 500
+#define H 500
 #define MagicalConstCRe  0.365
 #define MagicalConstCIm  0.365
 
@@ -81,9 +81,9 @@ void Build(void)
 			Poop.Im = b;
 			n = ComplIter(Poop);
 			//printf("%i ", n);
-			Frame[row][col][0] = n / 4;
-			Frame[row][col][1] = n / 2;
-			Frame[row][col][2] = n;
+			Frame[col][row][0] = 0;
+			Frame[col][row][1] = n;
+			Frame[col][row][2] = 0;
 
 		}
 
