@@ -1,103 +1,124 @@
-/*Kuzminvinov Artem 10-4*/
+/*Kuzminov Artem 10-4*/
 
 #include <stdlib.h>
 #include <glut.h>
+#include <stdio.h>
+
+
 #define W 500
 #define H 500
 #define MagicalConstCRe  0,36
 #define MagicalConstCIm  0,34
 
+double Frame[H][W][3];
 
-typedef struct{
- double Re, Im;
+typedef struct {
+	double Re, Im;
 }  Complex;
 
-
-double Mult (Complex A, Complex B)
+Complex Mult(Complex A, Complex B)
 {
-  return (A.Re * B.Im + B.Re * A.Re );
+	Complex Z;
+	Z.Re = A.Re*A.Im - B.Re*B.Im;
+	Z.Im = A.Re*A.Im + B.Re*B.Im;
+	return Z;
 }
 
-Complex Addition (Complex A, Complex B)
+Complex Addition(Complex A, Complex B)
 {
-  Complex Ans;
-  Ans.Re = A.Re + B.Re;
-  Ans.Im = A.Im + B.Im;
-  return Ans;
-
-}
-
-void Keyboard( unsigned char Key, int X, int Y )
-{
-  if (Key == 27)
-    exit(0);
-}
-
-void Display( void )
-{
-  glClearColor(0,0,0,1);
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  glFinish();
-
-  glutSwapBuffers();
-
-  glutPostRedisplay();
-}
-
-int ComplIter (Complex Z)
-{
-  int n = 0;
-  Complex C;
-  C.Re = MagicalConstCRe;
-  C.Im = MagicalConstCIm;
-
-  whille( n++ <= 254 && Mult(Z,Z) < 4)
-    Z = Addition(Mult(Z,Z), C) 
-  return n;
+	Complex Ans;
+	Ans.Re = A.Re + B.Re;
+	Ans.Im = A.Im + B.Im;
+	return Ans;
 
 }
 
-void Build ( unsigned char)
+double Length(Complex A)
 {
-  int row,col;
-  for (col = 0; i < H;i++)
-  {
-    for (row = 0; j < W; j++)
-    {
-      Complex Poop;
-      int n;
-      Poop.Re = col;
-      Poop.Im = row;
-      n = CompIter(Poop);
-      Frame[col][row][0] = n;
-      Frame[col][row][1] = n/2;
-      Frame[col][row][2] = n/4;
+	return A.Re*A.Re + A.Im*A.Im ;
+}
 
-    }
+void Keyboard(unsigned char Key, int X, int Y)
+{
+	if (Key == 27)
+		exit(0);
+}
 
-  }
+int ComplIter(Complex Z)
+{
+	int n = 0;
+	Complex C;
+	C.Re = MagicalConstCRe;
+	C.Im = MagicalConstCIm;
+
+	while (n++ <= 254 && Length(Z) <= 4)
+		Z = Addition(Mult(Z, Z), C);
+
+
+	return n;
+
+}
+
+
+void Build(void)
+{
+	int row, col;
+	double x0 = -2, x1 = 2, y0 = -2, y1 = 2;
+	double a, b;
+
+	for (col = 0; col < H;col++)
+	{
+		for (row = 0; row < W; row++)
+		{
+			Complex Poop;
+			int n;
+			
+			Poop.Re = col;
+			Poop.Im = row;
+			n = ComplIter(Poop);
+			printf("%i", n);
+			Frame[col][row][0] = (double)n;
+			Frame[col][row][1] = (double)n / 2;
+			Frame[col][row][2] = (double)n / 4;
+
+		}
+
+	}
 
 
 }
 
-int main ( int argc, char *argv[] )
+void Display(void)
 {
-  glutInit( &argc, argv);
-  
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-  glutInitWindowPosition(0, 0);
-  glutInitWindowSize(W, H);
-  glutCreateWindow("");
+	Build();
 
-  glutDisplayFunc(Display);
-  glutKeyboardFunc(Keyboard);
+	glDrawPixels(W, H, GL_BGR_EXT, GL_UNSIGNED_BYTE, Frame);
+	glFinish();
 
-  double Frame [H][W][3];
+	glutSwapBuffers();
+	glutPostRedisplay();
+}
 
 
-  glutMainLoop();
+int main(int argc, char *argv[])
+{
+	glutInit(&argc, argv);
 
-  return 0;
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+
+	glutInitWindowPosition(0, 0);
+	glutInitWindowSize(W, H);
+	glutCreateWindow("Mandelbrot");
+	
+	glutDisplayFunc(Display);
+	glutKeyboardFunc(Keyboard);
+
+	
+
+	glutMainLoop();
+
+	return 0;
 }
