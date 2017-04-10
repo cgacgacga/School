@@ -9,6 +9,12 @@
 
 unsigned char Frame[Frame_H][Frame_W][3];
 
+void Keyboard(unsigned char Key, int X, int Y)
+{
+	if (Key == 27)
+		exit(0);
+}
+
 void Display(void)
 {
 	glClearColor(0, 0, 0, 1);
@@ -17,7 +23,7 @@ void Display(void)
 	glRasterPos2d(-1, 1);
 	glPixelZoom(1, -1);
 
-        DrawPicFile("adress", 0, 0);
+        DrawPicFile("X:\\PICS\\M.G24", 3, 3);
 
 	glDrawPixels(Frame_W, Frame_H, GL_BGR_EXT, GL_UNSIGNED_BYTE, Frame);
 	glFinish();
@@ -34,14 +40,12 @@ int main(int argc, char *argv[])
 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 
-	glutInitWindowPosition(0, 0);
+	glutInitWindowPosition(50, 50);
 	glutInitWindowSize(Frame_W, Frame_H);
-	glutCreateWindow("PICS");
+        glutCreateWindow("PICS");
 	
 	glutDisplayFunc(Display);
-	//glutKeyboardFunc(Keyboard);
-
-	
+	glutKeyboardFunc(Keyboard);
 
 	glutMainLoop();
 
