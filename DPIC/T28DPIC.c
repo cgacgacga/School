@@ -1,81 +1,122 @@
-/* Picture load & draw project.
- * Written by: Smirnov Arsenty 10-4
- * Last update: 27.11.2016
- */
-
+/*Kuzminov Artem, 10-4, 10.04.17 */
+#include <glut.h>
 #include <stdlib.h>
-
-#include "D:/Lib/glut/glut.h"
+#include <stdio.h>
+#include <math.h>
 #include "dpic.h"
 
-INT FrameH = 540, FrameW = 960;  /* Frame size */
 
-ULONG *Frame;                    /* Main frame array */
+IMG Src;
 
-PIC Picture;                          /*  */
-
-/* Initialization function */
-static BOOL Init( VOID )
+void Display (void)
 {
-  PIC P1;
 
-  if ((Frame = malloc(sizeof(ULONG) * FrameW * FrameH)) == NULL)
-    return FALSE;
-
-  if (!PicLoad(&Picture, "D:\\PYATACK.G24"))
-  {
-    free(Frame);
-    return FALSE;
-  }
-  PicDraw(&Picture, 0, 0);
-  PicCreate(&P1, Picture.PicW, Picture.PicH);
-  LUTNegative();
-  LUTApply(&P1, &Picture);
-  PicDraw(&P1, P1.PicW, 0);
-
-  return TRUE;
-} /* End of 'Init' function */
-
-/* Display initialize function */
-static VOID Display( VOID )
-{
+  glClearColor(0.3, 0.5, 0.7, 1); 
   glClear(GL_COLOR_BUFFER_BIT);
-  glClearColor(0.3, 0.5, 0.7, 1);
-
+  /*ImageDraw(&Src, 0, 0);
+  ImageCreate(&Dest, Src.W, Src.H);
+  Negative(&Src, &Dest);
+  ImageDraw(&Dest, Src.W, 0);
+  ImageFree(&Dest);
+  ImageDraw(&Src, 0, 0);*/ 
   glRasterPos2d(-1, 1);
-  glPixelZoom(5, -5);
-
-  glDrawPixels(FrameW, FrameH, GL_BGRA_EXT, GL_UNSIGNED_BYTE, Frame);
-
+  glPixelZoom(1, -1);
+  glDrawPixels(FRAME_W, FRAME_H, GL_BGR_EXT, GL_UNSIGNED_BYTE, FRAME);
   glFinish();
   glutSwapBuffers();
   glutPostRedisplay();
-} /* End of 'Display' function */
+  
+}
 
-/* Keyboard initialize function */
-static VOID Keyboard( BYTE Key, INT X, INT Y )
-{
-  if (Key == 27)
-    PostQuitMessage(30);
-} /* End of 'Keyboard' function */
+void Keyboard (unsigned char Key, int X, int Y)
+ {
+   if (Key == 27)
+     exit(0);
+ }
 
-/* The main program function */
-INT main( INT argc, char *argv[] )
+
+
+int main (int argc, char *argv[])
+
 {
+  IMG P1, P2;
+
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGB / GLUT_DOUBLE);
-  glutInitWindowSize(960, 540);
-  glutInitWindowPosition(0, 0);
-  glutCreateWindow("CGSG forever!!!");
-
-  if (!Init())
-    return 569;
-
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+  glutInitWindowPosition(3, 3);
+  glutInitWindowSize(FRAME_W, FRAME_H); 
+  glutCreateWindow("DPIC");
   glutDisplayFunc(Display);
   glutKeyboardFunc(Keyboard);
+  if (ImageLoad(&P1, "X:\\PICS\\M.G24"))
+  {
+    ImageDraw (&P1, 0, 0);
+    if (ImageCreate(&P2, P1.W, P1.H))
+    {
+      byte LUT[256];
 
+      LUTSetCopy(LUT);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+     
+
+      LUTSetNegative(LUT);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+   
+      
+      LUTSetBrightness(LUT, +30);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+
+      LUTSetBrightness(LUT, -30);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+       
+      LUTSetContrast(LUT, 50,  205);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+      
+      LUTSetContrast(LUT, -50,  305);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+       
+      LUTSetGamma(LUT, 3);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+       
+      LUTSetGamma(LUT, 0.5);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+        
+      LUTSetAutoContrast(LUT, &P1);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+
+      LUTSetPoster(LUT, 2);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+
+      LUTSetPoster(LUT, 3);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+
+      LUTSetPoster(LUT, 5);
+      LUTApply(&P2, &P1, LUT);
+      ImageDrawAuto(&P2);
+
+      Negative(&P1, &P2);
+      ImageDrawAuto(&P2);
+      
+      Blur(&P1, &P2);
+      ImageDrawAuto(&P2);
+
+
+      ImageFree(&P2);
+    }
+    ImageFree(&P1);
+  } 
+ /* if (!ImageLoad(&Src, "X:\\PICS\\M.G24"))
+     return 0;*/
   glutMainLoop();
-  return 0;
-} /* end of 'main' function */
-
-/* END OF 'T28DPIC.C' FILE */
+}
