@@ -1,41 +1,35 @@
-/* Load & draw progect declaration functions module.
- * Written by: Smirnov Arsenty 10-4
- * Last update 27.11.2016
- */
+/*Kuzminov Artem, 10-4, 10.04.17 */
+#define FRAME_W 1024
+#define FRAME_H 768
 
-#ifndef __DPIC_H_
-#define __DPIC_H_
+unsigned char FRAME[FRAME_H][FRAME_W][3];
+typedef unsigned char byte;
+typedef byte RGB[3];
 
-#include <windows.h>
 
-typedef struct tagPIC
+typedef struct
 {
-  INT PicW, PicH;
-  ULONG *Pixels;
-} PIC;
+  int W, H;
+  RGB *PIXELS;
+} IMG;
 
-extern INT FrameW, FrameH;
-extern ULONG *Frame;
+int ImageLoad( IMG*P, char*FileName );
+void ImageDraw ( IMG *P, int x0, int y0 );
+void ImageDrawAuto ( IMG *P );
+int ImageCreate ( IMG *P, int NewW, int NewH );
+void ImageFree ( IMG *P );
+void Negative ( IMG *Src, IMG *Dst );
 
-/* Picture load function */
-BOOL PicLoad( PIC *P, CHAR *Filename );
 
-/* Picture create function */
-BOOL PicCreate( PIC *P, INT W, INT H );
+typedef byte LUT[256];
 
-/* Picture free function */
-VOID PicFree( PIC *P );
+void LUTSetCopy ( byte *LUT );
+void LUTSetNegative ( byte *LUT );
+void LUTSetBrightness ( byte *LUT, int Di );
+void LUTSetContrast ( byte *LUT, int A, int B );
+void LUTSetGamma ( byte *LUT, double Gamma );
+void LUTSetPoster ( byte *LUT, int Levels );
+void LUTSetAutoContrast ( byte *LUT, IMG *P );
+void LUTApply ( IMG *Dst, IMG *Src, byte *LUT ); 
 
-/* Picture draw function */
-VOID PicDraw( PIC *P, INT X0, INT Y0 );
-
-/* LUT negative function */
-VOID LUTNegative( VOID );
-
-/* LUT apply function */
-VOID LUTApply( PIC *Dest, PIC *Src );
-
-#endif /* __DPIC_H_ */
-
-/* END OF 'DPIC.H' FILE */
-
+void Blur ( IMG *Src, IMG *Dest );
