@@ -1,0 +1,26 @@
+
+
+bool Remove(node_st **root,int value)
+{
+	bool ok=false;
+	node_st *node=*root;
+	if(!node) return ok;
+	if(node->value<value) {
+		if(Remove(&node->p2,value) && !--node->b) ok=true;
+	}else if(node->value>value) {
+		if(Remove(&node->p1,value) && !++node->b) ok=true;
+	}else {					// нашли вершину кот. надо удалить
+		if(!node->p2) {           	// если есть возможность вырезать сразу, вырезаем
+			*root=node->p1;DelItem(node);
+			return true;
+		}
+		ok=GetMin(&node->p2,root);   	// находим вершину, которую вставляем на место удалённой
+		(*root)->b =node->b;		// ставим нашу замену на место удалённой вершины
+		(*root)->p1=node->p1;
+		(*root)->p2=node->p2;
+		DelItem(node);
+		if(ok) ok=!--(*root)->b;
+	} 
+	return BalanceRemove(root,ok);
+}
+
