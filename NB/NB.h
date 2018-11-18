@@ -14,7 +14,12 @@ typedef struct {
   int Age;
   int Form;
   char Sex;
-  char FromDigit;
+  char FormDigit;
 } Pupil;
 
 int AddPupil(int cur, Pupil *DB);
+int Output(int cur, Pupil *DB)
+;
+
+int DeleteByNumber(int cur, Pupil *DB, char *Num);
+void SortBy(int cur, Pupil *DB, char adj);
